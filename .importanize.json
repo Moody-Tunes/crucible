@@ -12,7 +12,10 @@
     {"type": "remainder"},
     {
       "type": "packages",
-      "packages": ["common"]
+      "packages": [
+        "common",
+        "libs"
+      ]
     },
     {"type": "local"}
   ]

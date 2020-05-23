@@ -1,11 +1,11 @@
 import random
 
-from bs4 import BeautifulSoup
 from locust import between, task
 from locust.contrib.fasthttp import FastHttpUser
 
 from common.auth import UserAuth
 from common.config import Config
+from libs.moodytunes_client import MoodyTunesClient
 
 
 class BrowseActions(UserAuth, FastHttpUser):
@@ -25,13 +25,7 @@ class BrowseActions(UserAuth, FastHttpUser):
     def vote_on_song(self):
         emotion = random.choice(self.emotions)
 
-        resp = self.client.get('/moodytunes/browse/')
-
-        # Parse CSRF token from response. Because we set the `HttpOnly`
-        # attribute on the CSRF-Token we need to pull the token value
-        # from the HTML config div like we do in the application
-        soup = BeautifulSoup(resp.content, 'html.parser')
-        csrf_token = soup.find(id='config')['data-csrf-token']
+        csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/browse/')
 
         # Get a song from the browse playlist for emotion to vote on
         resp = self.client.get(
