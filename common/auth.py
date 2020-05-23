@@ -1,6 +1,8 @@
 import random
 import string
 
+from common.config import Config
+
 
 class UserAuth(object):
 
@@ -12,7 +14,7 @@ class UserAuth(object):
         self.client.get('/accounts/create/')
 
         for cookie in self.client.cookiejar:
-            if cookie.name == 'csrftoken':
+            if cookie.name == Config.CSRF_COOKIE_NAME:
                 csrf_token = cookie.value
 
         username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
@@ -27,7 +29,7 @@ class UserAuth(object):
                 'csrfmiddlewaretoken': csrf_token
             },
             headers={
-                'X-CSRFToken': csrf_token,
+                Config.CSRF_HEADER_NAME: csrf_token,
                 'Referer': 'https://moodytunes.vm/accounts/create/'
             }
         )
@@ -38,7 +40,7 @@ class UserAuth(object):
         self.client.get('/accounts/login/')
 
         for cookie in self.client.cookiejar:
-            if cookie.name == 'csrftoken':
+            if cookie.name == Config.CSRF_COOKIE_NAME:
                 csrf_token = cookie.value
 
         self.client.post(
@@ -49,7 +51,7 @@ class UserAuth(object):
                 'csrfmiddlewaretoken': csrf_token
             },
             headers={
-                'X-CSRFToken': csrf_token,
+                Config.CSRF_HEADER_NAME: csrf_token,
                 'Referer': 'https://moodytunes.vm/accounts/login/'
             }
         )

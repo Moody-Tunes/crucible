@@ -39,7 +39,7 @@ class PlaylistActions(UserAuth, FastHttpUser):
                     'vote': True  # Need to be True for song to be in playlist
                 },
                 headers={
-                    'X-CSRFToken': csrf_token,
+                    Config.CSRF_HEADER_NAME: csrf_token,
                     'Referer': 'https://moodytunes.vm/moodytunes/browse/',
                 }
             )
@@ -73,7 +73,7 @@ class PlaylistActions(UserAuth, FastHttpUser):
                     'emotion': self.emotion,
                 },
                 headers={
-                    'X-CSRFToken': csrf_token,
+                    Config.CSRF_HEADER_NAME: csrf_token,
                     'Referer': 'https://moodytunes.vm/moodytunes/playlists/',
                 }
             )

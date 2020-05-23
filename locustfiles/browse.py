@@ -44,7 +44,7 @@ class BrowseActions(UserAuth, FastHttpUser):
                 'vote': random.randint(1, 100) % 2 == 0  # Randomize value for vote (coin flip for True or False)
             },
             headers={
-                'X-CSRFToken': csrf_token,
+                Config.CSRF_HEADER_NAME: csrf_token,
                 'Referer': 'https://moodytunes.vm/moodytunes/browse/',
             }
         )
