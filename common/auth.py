@@ -10,8 +10,11 @@ class UserAuth(object):
         self.login(username, password)
 
     def create_user(self):
-        response = self.client.get('/accounts/create/')
-        csrf_token = response.cookies['csrftoken']
+        self.client.get('/accounts/create/')
+
+        for cookie in self.client.cookiejar:
+            if cookie.name == 'csrftoken':
+                csrf_token = cookie.value
 
         username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
         password = ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
@@ -33,8 +36,11 @@ class UserAuth(object):
         return username, password
 
     def login(self, username, password):
-        response = self.client.get('/accounts/login/')
-        csrf_token = response.cookies['csrftoken']
+        self.client.get('/accounts/login/')
+
+        for cookie in self.client.cookiejar:
+            if cookie.name == 'csrftoken':
+                csrf_token = cookie.value
 
         self.client.post(
             '/accounts/login/',
