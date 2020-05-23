@@ -27,7 +27,7 @@ class PlaylistActions(UserAuth, HttpUser):
         soup = BeautifulSoup(resp.content, 'html.parser')
         csrf_token = soup.find(id='config')['data-csrf-token']
 
-        # Get a song from the browse playlist for emotion to vote on
+        # Get songs for the browse playlist for emotion to vote on
         resp = self.client.get(
             '/tunes/browse/',
             params={'emotion': self.emotion},
@@ -57,3 +57,41 @@ class PlaylistActions(UserAuth, HttpUser):
             params={'emotion': self.emotion},
             name='/tunes/playlist/?emotion=[emotion]',
         )
+
+    @task(2)
+    def delete_song_from_emotion_playlist(self):
+        resp = self.client.get('/moodytunes/playlists/')
+
+        # Parse CSRF token from response. Because we set the `HttpOnly`
+        # attribute on the CSRF-Token we need to pull the token value
+        # from the HTML config div like we do in the application
+        soup = BeautifulSoup(resp.content, 'html.parser')
+        csrf_token = soup.find(id='config')['data-csrf-token']
+
+        # Get a song from the emotion playlist to delete
+        resp = self.client.get(
+            '/tunes/playlist/',
+            params={'emotion': self.emotion},
+            name='/tunes/playlist/?emotion=[emotion]',
+        )
+        resp_data = resp.json()
+
+        # If we have a song in the emotion playlist, delete it
+        if resp_data['results']:
+            song = resp.json()['results'][0]
+
+            self.client.delete(
+                '/tunes/vote/',
+                json={
+                    'song_code': song['song']['code'],
+                    'emotion': self.emotion,
+                },
+                headers={
+                    'X-CSRFToken': csrf_token,
+                    'Referer': 'https://moodytunes.vm/moodytunes/playlists/',
+                }
+            )
+
+        # Otherwise, create a new playlist for the emotion
+        else:
+            self.create_playlist()
