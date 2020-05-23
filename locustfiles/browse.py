@@ -4,11 +4,11 @@ from bs4 import BeautifulSoup
 from locust import task, HttpUser, between
 
 from common.auth import UserAuth
+from common.config import Config
 
 
 class BrowseActions(UserAuth, HttpUser):
-    emotions = ['MEL', 'CLM', 'HPY', 'EXC']  # TODO: Move to config?
-
+    emotions = Config.EMOTIONS
     wait_time = between(5, 9)
 
     @task(1)
