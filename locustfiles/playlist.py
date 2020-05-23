@@ -3,10 +3,11 @@ import random
 from bs4 import BeautifulSoup
 from common.auth import UserAuth
 from common.config import Config
-from locust import HttpUser, between, task
+from locust import between, task
+from locust.contrib.fasthttp import FastHttpUser
 
 
-class PlaylistActions(UserAuth, HttpUser):
+class PlaylistActions(UserAuth, FastHttpUser):
     emotions = Config.EMOTIONS
     emotion = None
     wait_time = between(5, 9)
@@ -28,8 +29,7 @@ class PlaylistActions(UserAuth, HttpUser):
 
         # Get songs for the browse playlist for emotion to vote on
         resp = self.client.get(
-            '/tunes/browse/',
-            params={'emotion': self.emotion},
+            '/tunes/browse/?emotion={}'.format(self.emotion),
             name='/tunes/browse/?emotion=[emotion]',
         )
 
@@ -52,8 +52,7 @@ class PlaylistActions(UserAuth, HttpUser):
     @task(1)
     def get_emotion_playlist(self):
         self.client.get(
-            '/tunes/playlist/',
-            params={'emotion': self.emotion},
+            '/tunes/playlist/?emotion={}'.format(self.emotion),
             name='/tunes/playlist/?emotion=[emotion]',
         )
 
@@ -69,8 +68,7 @@ class PlaylistActions(UserAuth, HttpUser):
 
         # Get a song from the emotion playlist to delete
         resp = self.client.get(
-            '/tunes/playlist/',
-            params={'emotion': self.emotion},
+            '/tunes/playlist/?emotion={}'.format(self.emotion),
             name='/tunes/playlist/?emotion=[emotion]',
         )
         resp_data = resp.json()
