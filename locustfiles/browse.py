@@ -11,7 +11,7 @@ class BrowseActions(UserAuth, FastHttpUser):
     emotions = Config.EMOTIONS
     wait_time = between(5, 9)
 
-    @task
+    @task(1)
     def get_browse_playlist(self):
         emotion = random.choice(self.emotions)
 
@@ -20,7 +20,7 @@ class BrowseActions(UserAuth, FastHttpUser):
             name='/tunes/browse/?emotion=[emotion]',
         )
 
-    @task
+    @task(2)
     def vote_on_song(self):
         emotion = random.choice(self.emotions)
 
