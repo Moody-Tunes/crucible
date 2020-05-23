@@ -2,33 +2,36 @@
 Testing facilities for MoodyTunes. This repository will house all the code needed to test the MoodyTunes
 application.
 
+## Setup
+
+We use [pre-commit](https://pre-commit.com/) for running hooks during git commits. This will help immensely with
+developer workflow by running linters, checkers, and other tools when you make commits. To install pre-commit, create a
+virtual environment and install the pre-commit Python package:
+
+```shell script
+virtualenv -p $(which python3) venv
+source venv/bin/activate
+(venv) pip install install -r requirements.txt
+```
+
+Next, install pre-commit to register the hooks use in our project:
+
+```shell script
+(venv) pre-commit install
+```
+
+This should run the pre-commit hooks when you make a commit to the crucible repository.
+
 ## Load Testing
 
 We use [locust](https://locust.io/) for load testing MoodyTunes. This allows us to simulate high
 volume traffic against our application.
 
-### Installation
-
-1. Install the Python3 dev package for installing the locust library
-
-`sudo apt-get install python3-dev`
-
-2. Create a virtual environment in the repository directory and activate it
-
-```shell script
-virtualenv -p $(which python3) venv
-source venv/bin/activate
-```
-
-3. Install the requirements
-
-`(venv) pip install -r requirements.txt`
-
-
 ### Running Locust
 
 To run the locust load simulator, run the `locust` command from the repository directory passing a locustfile as an
-argument with the `-f` argument.
+argument with the `-f` argument. Assuming you have already installed the project dependencies and have activated the
+virtual environment for the project, all you'll need to do is run
 
 `(venv) locust -f locustfiles/<locustfile>.py`
 
