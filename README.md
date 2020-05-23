@@ -27,9 +27,10 @@ source venv/bin/activate
 
 ### Running Locust
 
-To run the locust load simulator, run the `locust` command from the repository directory
+To run the locust load simulator, run the `locust` command from the repository directory passing a locustfile as an
+argument with the `-f` argument.
 
-`(venv) locust`
+`(venv) locust -f locustfiles/<locustfile>.py`
 
 This will start the locust server on port 8089 of the machine running locust. Next, navigate to `localhost:8089` in a
 webbrowser to view the locust interface. You should see a page that looks like this:
