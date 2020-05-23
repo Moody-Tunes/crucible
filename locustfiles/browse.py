@@ -3,18 +3,20 @@ import random
 from bs4 import BeautifulSoup
 from common.auth import UserAuth
 from common.config import Config
-from locust import HttpUser, between, task
+from locust import between, task
+from locust.contrib.fasthttp import FastHttpUser
 
 
-class BrowseActions(UserAuth, HttpUser):
+class BrowseActions(UserAuth, FastHttpUser):
     emotions = Config.EMOTIONS
     wait_time = between(5, 9)
 
     @task(1)
     def get_browse_playlist(self):
+        emotion = random.choice(self.emotions)
+
         self.client.get(
-            '/tunes/browse/',
-            params={'emotion': random.choice(self.emotions)},
+            '/tunes/browse/?emotion={}'.format(emotion),
             name='/tunes/browse/?emotion=[emotion]',
         )
 
@@ -32,8 +34,7 @@ class BrowseActions(UserAuth, HttpUser):
 
         # Get a song from the browse playlist for emotion to vote on
         resp = self.client.get(
-            '/tunes/browse/',
-            params={'emotion': random.choice(self.emotions)},
+            '/tunes/browse/?emotion={}'.format(emotion),
             name='/tunes/browse/?emotion=[emotion]',
         )
 
