@@ -5,7 +5,6 @@ import string
 class UserAuth(object):
 
     def on_start(self):
-        self.client.verify = False  # Needed to avoid SSL errors with self-signed cert
         username, password = self.create_user()
         self.login(username, password)
 
