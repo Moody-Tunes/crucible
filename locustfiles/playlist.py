@@ -1,10 +1,11 @@
 import random
 
 from bs4 import BeautifulSoup
-from common.auth import UserAuth
-from common.config import Config
 from locust import between, task
 from locust.contrib.fasthttp import FastHttpUser
+
+from common.auth import UserAuth
+from common.config import Config
 
 
 class PlaylistActions(UserAuth, FastHttpUser):

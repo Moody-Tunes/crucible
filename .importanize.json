@@ -12,13 +12,7 @@
     {"type": "remainder"},
     {
       "type": "packages",
-      "packages": [
-        "accounts",
-        "base",
-        "moodytunes",
-        "tunes",
-        "libs"
-      ]
+      "packages": ["common"]
     },
     {"type": "local"}
   ]
