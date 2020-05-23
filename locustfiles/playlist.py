@@ -55,21 +55,21 @@ class PlaylistActions(UserAuth, FastHttpUser):
     def delete_song_from_emotion_playlist(self):
         csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/playlists/')
 
-        # Get a song from the emotion playlist to delete
         resp = self.client.get(
             '/tunes/playlist/?emotion={}'.format(self.emotion),
             name='/tunes/playlist/?emotion=[emotion]',
         )
         resp_data = resp.json()
 
-        # If we have a song in the emotion playlist, delete it
+        # If there are songs in the playlist, delete a song from it
         if resp_data['results']:
-            song = resp.json()['results'][0]
+            votes = resp.json()['results']
+            song = random.choice(votes)['song']
 
             self.client.delete(
                 '/tunes/vote/',
                 json={
-                    'song_code': song['song']['code'],
+                    'song_code': song['code'],
                     'emotion': self.emotion,
                 },
                 headers={
