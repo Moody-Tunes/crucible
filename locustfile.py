@@ -1,3 +1,5 @@
+import random
+
 from locust import HttpUser, task, between
 
 
@@ -29,4 +31,9 @@ class BrowseActions(HttpUser):
 
     @task(1)
     def get_browse_playlist(self):
-        self.client.get('/tunes/browse/?emotion=HPY')
+        emotions = ['MEL', 'CLM', 'HPY', 'EXC']  # TODO: Move to config?
+        self.client.get(
+            '/tunes/browse/',
+            params={'emotion': random.choice(emotions)},
+            name='/tunes/browse/?emotion=[emotion]',
+        )
