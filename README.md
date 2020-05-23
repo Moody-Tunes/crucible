@@ -23,3 +23,24 @@ source venv/bin/activate
 3. Install the requirements
 
 `(venv) pip install -r requirements.txt`
+
+
+### Running Locust
+
+To run the locust load simulator, run the `locust` command from the repository directory
+
+`(venv) locust`
+
+This will start the locust server on port 8089 of the machine running locust. Next, navigate to `localhost:8089` in a
+webbrowser to view the locust interface. You should see a page that looks like this:
+
+![Locust Interface](./imgs/locust_interface.png)
+
+This is the interface used to interact with the locust specific configuration. A breakdown is as follows:
+
+- The `Number of total users to simulate` input represents the number of users that locust will use in its load testing.
+This will determine how many users locust will create for its run.
+- The `Hatch rate` input represents how long locust will wait until creating a new user for testing. This determines
+the rate at which locust will create new users for its pool in sending requests.
+- The `Host` input signifies the host to make requests to when running the locust tests. This should always be
+`https://moodytunes.vm` as we want to run tests against a local instance of MoodyTunes.
