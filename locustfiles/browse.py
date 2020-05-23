@@ -1,10 +1,9 @@
 import random
 
 from bs4 import BeautifulSoup
-from locust import task, HttpUser, between
-
 from common.auth import UserAuth
 from common.config import Config
+from locust import HttpUser, between, task
 
 
 class BrowseActions(UserAuth, HttpUser):
