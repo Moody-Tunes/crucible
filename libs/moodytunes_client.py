@@ -137,7 +137,8 @@ class MoodyTunesClient(object):
         :return: (locust.contrib.fasthttp.FastResponse)
         """
         referer = 'https://moodytunes.vm/moodytunes/playlists/'
-        csrf_token = MoodyTunesClient.get_csrf_token(client, referer)
+        endpoint = '/moodytunes/playlists/'
+        csrf_token = MoodyTunesClient.get_csrf_token(client, endpoint)
 
         return client.delete(
             '/tunes/vote/',
@@ -164,7 +165,8 @@ class MoodyTunesClient(object):
         :return: (locust.contrib.fasthttp.FastResponse)
         """
         referer = 'https://moodytunes.vm/moodytunes/browse/'
-        csrf_token = MoodyTunesClient.get_csrf_token(client, referer)
+        endpoint = '/moodytunes/browse/'
+        csrf_token = MoodyTunesClient.get_csrf_token(client, endpoint)
 
         return client.post(
             '/tunes/vote/',
