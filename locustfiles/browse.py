@@ -15,11 +15,7 @@ class BrowseActions(UserAuth, FastHttpUser):
     @task(1)
     def get_browse_playlist(self):
         emotion = random.choice(self.emotions)
-
-        self.client.get(
-            '/tunes/browse/?emotion={}'.format(emotion),
-            name='/tunes/browse/?emotion=[emotion]',
-        )
+        MoodyTunesClient.get_browse_playlist(self.client, emotion)
 
     @task(2)
     def vote_on_song(self):
@@ -28,23 +24,10 @@ class BrowseActions(UserAuth, FastHttpUser):
         csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/browse/')
 
         # Get a song from the browse playlist for emotion to vote on
-        resp = self.client.get(
-            '/tunes/browse/?emotion={}'.format(emotion),
-            name='/tunes/browse/?emotion=[emotion]',
-        )
+        resp = MoodyTunesClient.get_browse_playlist(self.client, emotion)
 
         resp_data = resp.json()
         song = random.choice(resp_data)
+        vote = random.randint(1, 100) % 2 == 0  # Randomize value for vote (coin flip for True or False)
 
-        self.client.post(
-            '/tunes/vote/',
-            json={
-                'song_code': song['code'],
-                'emotion': emotion,
-                'vote': random.randint(1, 100) % 2 == 0  # Randomize value for vote (coin flip for True or False)
-            },
-            headers={
-                Config.CSRF_HEADER_NAME: csrf_token,
-                'Referer': 'https://moodytunes.vm/moodytunes/browse/',
-            }
-        )
+        MoodyTunesClient.create_vote(self.client, song, emotion, csrf_token, vote)
