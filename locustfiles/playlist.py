@@ -24,8 +24,10 @@ class PlaylistActions(UserAuth, FastHttpUser):
         resp = MoodyTunesClient.get_browse_playlist(self.client, self.emotion)
         resp_data = resp.json()
 
+        csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/browse/')
+
         for song in resp_data:
-            MoodyTunesClient.create_vote(self.client, song, self.emotion, True)
+            MoodyTunesClient.create_vote(self.client, song, self.emotion, True, csrf_token)
 
     @task
     def get_emotion_playlist(self):

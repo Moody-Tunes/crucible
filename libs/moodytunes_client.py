@@ -153,7 +153,7 @@ class MoodyTunesClient(object):
         )
 
     @staticmethod
-    def create_vote(client, song, emotion, vote):
+    def create_vote(client, song, emotion, vote, csrf_token=None):
         """
         Register a vote for a song and emotion
 
@@ -161,12 +161,16 @@ class MoodyTunesClient(object):
         :param song: (dict) Song object to reference for request
         :param emotion: (str) Emotion codename to use in making the request
         :param vote: (bool) Value for whether or not vote is "upvoted"
+        :param csrf_token: (str) Optional CSRF token to use in request
+            - Pass in cases where multiple requests to create votes are called
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
         referer = 'https://moodytunes.vm/moodytunes/browse/'
-        endpoint = '/moodytunes/browse/'
-        csrf_token = MoodyTunesClient.get_csrf_token(client, endpoint)
+
+        if csrf_token is None:
+            endpoint = '/moodytunes/browse/'
+            csrf_token = MoodyTunesClient.get_csrf_token(client, endpoint)
 
         return client.post(
             '/tunes/vote/',
