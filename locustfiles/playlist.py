@@ -23,60 +23,28 @@ class PlaylistActions(UserAuth, FastHttpUser):
         csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/browse/')
 
         # Get songs for the browse playlist for emotion to vote on
-        resp = self.client.get(
-            '/tunes/browse/?emotion={}'.format(self.emotion),
-            name='/tunes/browse/?emotion=[emotion]',
-        )
-
+        resp = MoodyTunesClient.get_browse_playlist(self.client, self.emotion)
         resp_data = resp.json()
 
         for song in resp_data:
-            self.client.post(
-                '/tunes/vote/',
-                json={
-                    'song_code': song['code'],
-                    'emotion': self.emotion,
-                    'vote': True  # Need to be True for song to be in playlist
-                },
-                headers={
-                    Config.CSRF_HEADER_NAME: csrf_token,
-                    'Referer': 'https://moodytunes.vm/moodytunes/browse/',
-                }
-            )
+            MoodyTunesClient.create_vote(self.client, song, self.emotion, csrf_token, True)
 
     @task(1)
     def get_emotion_playlist(self):
-        self.client.get(
-            '/tunes/playlist/?emotion={}'.format(self.emotion),
-            name='/tunes/playlist/?emotion=[emotion]',
-        )
+        MoodyTunesClient.get_emotion_playlist(self.client, self.emotion)
 
     @task(2)
     def delete_song_from_emotion_playlist(self):
         csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/playlists/')
 
-        resp = self.client.get(
-            '/tunes/playlist/?emotion={}'.format(self.emotion),
-            name='/tunes/playlist/?emotion=[emotion]',
-        )
+        resp = MoodyTunesClient.get_emotion_playlist(self.client, self.emotion)
         resp_data = resp.json()
 
         # If there are songs in the playlist, delete a song from it
         if resp_data['results']:
             votes = resp.json()['results']
             song = random.choice(votes)['song']
-
-            self.client.delete(
-                '/tunes/vote/',
-                json={
-                    'song_code': song['code'],
-                    'emotion': self.emotion,
-                },
-                headers={
-                    Config.CSRF_HEADER_NAME: csrf_token,
-                    'Referer': 'https://moodytunes.vm/moodytunes/playlists/',
-                }
-            )
+            MoodyTunesClient.delete_vote(self.client, song, self.emotion, csrf_token)
 
         # Otherwise, create a new playlist for the emotion
         else:
