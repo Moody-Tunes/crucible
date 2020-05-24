@@ -1,3 +1,6 @@
+import random
+import string
+
 from bs4 import BeautifulSoup
 
 from common.config import Config
@@ -24,6 +27,72 @@ class MoodyTunesClient(object):
 
         soup = BeautifulSoup(resp.content, 'html.parser')
         return soup.find(id='config')['data-csrf-token']
+
+    @staticmethod
+    def create_user(client):
+        """
+        Create a user with a random username and password for the application
+
+        :param client: (FastHttpSession) Client used by the Locust instance
+
+        :return: (tuple) Username, Password combination for created user
+        """
+        username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
+        password = ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
+        csrf_token = ''
+
+        client.get('/accounts/create/')
+
+        for cookie in client.cookiejar:
+            if cookie.name == Config.CSRF_COOKIE_NAME:
+                csrf_token = cookie.value
+
+        client.post(
+            '/accounts/create/',
+            {
+                'username': username,
+                'password': password,
+                'confirm_password': password,
+                'csrfmiddlewaretoken': csrf_token
+            },
+            headers={
+                Config.CSRF_HEADER_NAME: csrf_token,
+                'Referer': 'https://moodytunes.vm/accounts/create/'
+            }
+        )
+
+        return username, password
+
+    @staticmethod
+    def login(client, username, password):
+        """
+        Log in to application with provided user credentials
+
+        :param client: (FastHttpSession) Client used by the Locust instance
+        :param username: (str) Username for the authenticated user
+        :param password: (str) Password for the authenticated user
+
+        :return: (locust.contrib.fasthttp.FastResponse)
+        """
+        client.get('/accounts/login/')
+        csrf_token = ''
+
+        for cookie in client.cookiejar:
+            if cookie.name == Config.CSRF_COOKIE_NAME:
+                csrf_token = cookie.value
+
+        return client.post(
+            '/accounts/login/',
+            {
+                'username': username,
+                'password': password,
+                'csrfmiddlewaretoken': csrf_token
+            },
+            headers={
+                Config.CSRF_HEADER_NAME: csrf_token,
+                'Referer': 'https://moodytunes.vm/accounts/login/'
+            }
+        )
 
     @staticmethod
     def get_browse_playlist(client, emotion):
