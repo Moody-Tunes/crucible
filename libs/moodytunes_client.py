@@ -57,17 +57,18 @@ class MoodyTunesClient(object):
         )
 
     @staticmethod
-    def delete_vote(client, song, emotion, csrf_token):
+    def delete_vote(client, song, emotion):
         """
         Delete a vote from an emotion playlist.
 
         :param client: (FastHttpSession) Client used by the Locust instance
         :param song: (dict) Song object to reference for request
         :param emotion: (str) Emotion codename to use in making the request
-        :param csrf_token:(str) CSRF token to send in request
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
+        referer = 'https://moodytunes.vm/moodytunes/playlists/'
+        csrf_token = MoodyTunesClient.get_csrf_token(client, referer)
 
         return client.delete(
             '/tunes/vote/',
@@ -77,23 +78,25 @@ class MoodyTunesClient(object):
             },
             headers={
                 Config.CSRF_HEADER_NAME: csrf_token,
-                'Referer': 'https://moodytunes.vm/moodytunes/playlists/',
+                'Referer': referer,
             }
         )
 
     @staticmethod
-    def create_vote(client, song, emotion, csrf_token, vote):
+    def create_vote(client, song, emotion, vote):
         """
         Register a vote for a song and emotion
 
         :param client: (FastHttpSession) Client used by the Locust instance
         :param song: (dict) Song object to reference for request
         :param emotion: (str) Emotion codename to use in making the request
-        :param csrf_token: (str) CSRF token to send in request
         :param vote: (bool) Value for whether or not vote is "upvoted"
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
+        referer = 'https://moodytunes.vm/moodytunes/browse/'
+        csrf_token = MoodyTunesClient.get_csrf_token(client, referer)
+
         return client.post(
             '/tunes/vote/',
             json={
@@ -103,6 +106,6 @@ class MoodyTunesClient(object):
             },
             headers={
                 Config.CSRF_HEADER_NAME: csrf_token,
-                'Referer': 'https://moodytunes.vm/moodytunes/browse/',
+                'Referer': referer,
             }
         )
