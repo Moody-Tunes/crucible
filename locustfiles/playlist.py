@@ -27,11 +27,11 @@ class PlaylistActions(UserAuth, FastHttpUser):
         for song in resp_data:
             MoodyTunesClient.create_vote(self.client, song, self.emotion, True)
 
-    @task(1)
+    @task
     def get_emotion_playlist(self):
         MoodyTunesClient.get_emotion_playlist(self.client, self.emotion)
 
-    @task(2)
+    @task
     def delete_song_from_emotion_playlist(self):
         resp = MoodyTunesClient.get_emotion_playlist(self.client, self.emotion)
         resp_data = resp.json()

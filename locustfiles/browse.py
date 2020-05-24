@@ -12,12 +12,12 @@ class BrowseActions(UserAuth, FastHttpUser):
     emotions = Config.EMOTIONS
     wait_time = between(5, 9)
 
-    @task(1)
+    @task
     def get_browse_playlist(self):
         emotion = random.choice(self.emotions)
         MoodyTunesClient.get_browse_playlist(self.client, emotion)
 
-    @task(2)
+    @task
     def vote_on_song(self):
         emotion = random.choice(self.emotions)
 
