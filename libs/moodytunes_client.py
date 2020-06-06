@@ -182,5 +182,6 @@ class MoodyTunesClient(object):
             headers={
                 Config.CSRF_HEADER_NAME: csrf_token,
                 'Referer': referer,
-            }
+            },
+            name='/tunes/vote/?vote={}'.format(vote)
         )
