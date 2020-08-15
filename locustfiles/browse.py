@@ -18,6 +18,10 @@ class BrowseActions(UserAuth, FastHttpUser):
         MoodyTunesClient.get_browse_playlist(self.client, emotion)
 
     @task
+    def get_last_playlist(self):
+        MoodyTunesClient.get_last_playlist(self.client)
+
+    @task
     def vote_on_song(self):
         emotion = random.choice(self.emotions)
 

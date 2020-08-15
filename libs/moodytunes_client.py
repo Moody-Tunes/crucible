@@ -110,6 +110,18 @@ class MoodyTunesClient(object):
         )
 
     @staticmethod
+    def get_last_playlist(client):
+        """
+        Get the last browse playlist
+
+        :param client: (FastHttpSession) Client used by the Locust instance
+
+        :return: (locust.contrib.fasthttp.FastResponse)
+        """
+        with client.get('/tunes/browse/last/', name='/tunes/browse/last/', catch_response=True) as resp:
+            resp.success()
+
+    @staticmethod
     def get_emotion_playlist(client, emotion):
         """
         Get a playlist for the songs the user has voted as making them feel
