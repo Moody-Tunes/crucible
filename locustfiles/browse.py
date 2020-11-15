@@ -28,8 +28,11 @@ class BrowseActions(UserAuth, FastHttpUser):
         # Get a song from the browse playlist for emotion to vote on
         resp = MoodyTunesClient.get_browse_playlist(self.client, emotion)
         resp_data = resp.json()
-        song = random.choice(resp_data)
 
-        vote = random.choice([True, False])  # Randomize value for vote
+        # Ensure we have a track from the playlist to vote on
+        if resp_data:
+            song = random.choice(resp_data)
 
-        MoodyTunesClient.create_vote(self.client, song, emotion, vote)
+            vote = random.choice([True, False])  # Randomize value for vote
+
+            MoodyTunesClient.create_vote(self.client, song, emotion, vote)
