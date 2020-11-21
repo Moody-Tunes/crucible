@@ -8,7 +8,7 @@ class UserAuth(object):
         self.login(username, password)
 
     def create_user(self):
-        return MoodyTunesClient.create_user(self.client)
+        return MoodyTunesClient.create_user(self.client, self.host)
 
     def login(self, username, password):
-        return MoodyTunesClient.login(self.client, username, password)
+        return MoodyTunesClient.login(self.client, username, password, self.host)

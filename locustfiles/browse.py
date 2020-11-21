@@ -35,4 +35,4 @@ class BrowseActions(UserAuth, FastHttpUser):
 
             vote = random.choice([True, False])  # Randomize value for vote
 
-            MoodyTunesClient.create_vote(self.client, song, emotion, vote)
+            MoodyTunesClient.create_vote(self.client, song, emotion, vote, self.host)

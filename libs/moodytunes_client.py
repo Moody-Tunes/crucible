@@ -29,11 +29,12 @@ class MoodyTunesClient(object):
         return soup.find(id='config')['data-csrf-token']
 
     @staticmethod
-    def create_user(client):
+    def create_user(client, host):
         """
         Create a user with a random username and password for the application
 
         :param client: (FastHttpSession) Client used by the Locust instance
+        :param host: (str) Target host to be load tested (specified from command line or Locust UI)
 
         :return: (tuple) Username, Password combination for created user
         """
@@ -57,20 +58,21 @@ class MoodyTunesClient(object):
             },
             headers={
                 Config.CSRF_HEADER_NAME: csrf_token,
-                'Referer': 'https://moodytunes.vm/accounts/create/'
+                'Referer': '{}/accounts/create/'.format(host)
             }
         )
 
         return username, password
 
     @staticmethod
-    def login(client, username, password):
+    def login(client, username, password, host):
         """
         Log in to application with provided user credentials
 
         :param client: (FastHttpSession) Client used by the Locust instance
         :param username: (str) Username for the authenticated user
         :param password: (str) Password for the authenticated user
+        :param host: (str) Target host to be load tested (specified from command line or Locust UI)
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
@@ -90,7 +92,7 @@ class MoodyTunesClient(object):
             },
             headers={
                 Config.CSRF_HEADER_NAME: csrf_token,
-                'Referer': 'https://moodytunes.vm/accounts/login/'
+                'Referer': '{}/accounts/login/'.format(host)
             }
         )
 
@@ -138,17 +140,18 @@ class MoodyTunesClient(object):
         )
 
     @staticmethod
-    def delete_vote(client, song, emotion):
+    def delete_vote(client, song, emotion, host):
         """
         Delete a vote from an emotion playlist.
 
         :param client: (FastHttpSession) Client used by the Locust instance
         :param song: (dict) Song object to reference for request
         :param emotion: (str) Emotion codename to use in making the request
+        :param host: (str) Target host to be load tested (specified from command line or Locust UI)
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
-        referer = 'https://moodytunes.vm/moodytunes/playlists/'
+        referer = '{}/moodytunes/playlists/'.format(host)
         endpoint = '/moodytunes/playlists/'
         csrf_token = MoodyTunesClient.get_csrf_token(client, endpoint)
 
@@ -165,7 +168,7 @@ class MoodyTunesClient(object):
         )
 
     @staticmethod
-    def create_vote(client, song, emotion, vote, csrf_token=None):
+    def create_vote(client, song, emotion, vote, host, csrf_token=None):
         """
         Register a vote for a song and emotion
 
@@ -173,12 +176,13 @@ class MoodyTunesClient(object):
         :param song: (dict) Song object to reference for request
         :param emotion: (str) Emotion codename to use in making the request
         :param vote: (bool) Value for whether or not vote is "upvoted"
+        :param host: (str) Target host to be load tested (specified from command line or Locust UI)
         :param csrf_token: (str) Optional CSRF token to use in request
             - Pass in cases where multiple requests to create votes are called
 
         :return: (locust.contrib.fasthttp.FastResponse)
         """
-        referer = 'https://moodytunes.vm/moodytunes/browse/'
+        referer = '{}/moodytunes/browse/'.format(host)
 
         if csrf_token is None:
             endpoint = '/moodytunes/browse/'
