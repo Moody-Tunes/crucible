@@ -38,7 +38,7 @@ class MoodyTunesClient(object):
 
         :return: (tuple) Username, Password combination for created user
         """
-        username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
+        username = 'locust_{}'.format(''.join(random.choice(string.ascii_lowercase) for _ in range(8)))
         password = ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
         csrf_token = ''
 
