@@ -11,7 +11,7 @@ from datetime import date
 HELP = '''
 Run locust against a host using a specified locustfile.
 
-The host to target, number of users to create, the rate to hatch users, and the length
+The host to target, number of users to create, the rate to spawn users, and the length
 of the locust run time can all be specified through command line arguments.
 
 Once the locust test has completed, the stats output file will be moved to the specified
@@ -35,7 +35,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--hatch_rate',
+    '--spawn_rate',
     type=int,
     default=1,
     help='Rate at which to spawn users when running the test (per second). Default is 1 user per second.'
@@ -77,7 +77,7 @@ args = parser.parse_args()
 
 locust_file = args.locust_file
 users = args.users
-hatch_rate = args.hatch_rate
+spawn_rate = args.spawn_rate
 run_time = args.run_time
 host = args.host
 output_directory = args.output_directory
@@ -88,13 +88,13 @@ if not os.path.exists(locust_file):
 
 # Parse test target from locust file name to build output prefix
 test_target = locust_file.split('/')[1].replace('.py', '')
-output_prefix = f'{test_target}_{users}_users_{hatch_rate}_per_sec'
+output_prefix = f'{test_target}_{users}_users_{spawn_rate}_per_sec'
 
 command = [
     'locust',
     f'--locustfile {locust_file}',
     f'--users {users}',
-    f'--hatch-rate {hatch_rate}',
+    f'--spawn-rate {spawn_rate}',
     f'--host {host}',
     '--headless',
     f'--run-time {run_time}',
