@@ -106,7 +106,7 @@ subprocess.run(cmd, check=True, shell=True)
 
 # Write output file to output directory
 os.makedirs(output_directory, exist_ok=True)
-os.rename(f'{output_prefix}_stats.csv', f'{output_directory}/{output_prefix}.csv')
+os.rename(f'{output_prefix}_stats.csv', f'{output_directory}/{output_prefix}_{run_time}.csv')
 
 # Delete other CSV files from locust
 for f in glob.glob('*.csv'):
