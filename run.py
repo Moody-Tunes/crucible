@@ -21,11 +21,7 @@ directory with a name that contains information about the locust run.
 
 parser = argparse.ArgumentParser(prog='./run.py', formatter_class=argparse.RawTextHelpFormatter, description=HELP)
 
-parser.add_argument(
-    'locust_file',
-    type=str,
-    help='Locust file name to use when running the locust test.'
-)
+parser.add_argument('locust_file', help='Locust file name to use when running the locust test.')
 
 parser.add_argument(
     '--users',
@@ -43,7 +39,6 @@ parser.add_argument(
 
 parser.add_argument(
     '--run_time',
-    type=str,
     default='5m',
     help='''
 Amount of time to run the locust test.
@@ -54,7 +49,6 @@ Default is 5 minutes (5m).
 
 parser.add_argument(
     '--host',
-    type=str,
     default='https://moodytunes.vm',
     help='''
 Moodytunes host to run the locust test against.
@@ -65,20 +59,14 @@ Default is %(default)s.
 
 parser.add_argument(
     '--output_directory',
-    type=str,
-    default=f'{os.getenv("HOME")}/development/Moodytunes/data/load_tests/baseline_{date.today().isoformat()}',
+    default=f'{os.getenv("HOME")}/development/Moodytunes/data/load_tests/BASELINES/baseline_{date.today().isoformat()}',
     help='''
 Directory to write the test results to. Will create the directory if it does not exist.
-Default is $HOME/development/Moodytunes/data/load_tests/baseline_$CURRENT_DATE_IN_ISO_FORMAT
+Default is $HOME/development/Moodytunes/data/load_tests/BASELINES/baseline_$CURRENT_DATE_IN_ISO_FORMAT
 '''
 )
 
-parser.add_argument(
-    '--output_prefix',
-    type=str,
-    default='',
-    help='Optional prefix to include in output filename'
-)
+parser.add_argument('--output_prefix', default='', help='Optional prefix to include in output filename.')
 
 args = parser.parse_args()
 
