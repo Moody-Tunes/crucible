@@ -73,6 +73,13 @@ Default is $HOME/development/Moodytunes/data/load_tests/baseline_$CURRENT_DATE_I
 '''
 )
 
+parser.add_argument(
+    '--output_prefix',
+    type=str,
+    default='',
+    help='Optional prefix to include in output filename'
+)
+
 args = parser.parse_args()
 
 locust_file = args.locust_file
@@ -81,6 +88,7 @@ spawn_rate = args.spawn_rate
 run_time = args.run_time
 host = args.host
 output_directory = args.output_directory
+output_filename_prefix = args.output_prefix
 
 if not os.path.exists(locust_file):
     print(f'ERROR: {locust_file} does not exist!', file=sys.stderr)
@@ -88,7 +96,7 @@ if not os.path.exists(locust_file):
 
 # Parse test target from locust file name to build output prefix
 test_target = locust_file.split('/')[1].replace('.py', '')
-output_prefix = f'{test_target}_{users}_users_{spawn_rate}_per_sec'
+output_prefix = f'{output_filename_prefix}{test_target}_{users}_users_{spawn_rate}_per_sec'
 
 command = [
     'locust',
