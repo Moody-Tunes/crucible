@@ -30,8 +30,8 @@ class BrowseActions(UserAuth, FastHttpUser):
         resp_data = resp.json()
 
         # Ensure we have a track from the playlist to vote on
-        if resp_data:
-            song = random.choice(resp_data)
+        if resp_data['results']:
+            song = random.choice(resp_data['results'])
 
             vote = random.choice([True, False])  # Randomize value for vote
 

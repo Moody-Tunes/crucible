@@ -26,7 +26,7 @@ class PlaylistActions(UserAuth, FastHttpUser):
 
         csrf_token = MoodyTunesClient.get_csrf_token(self.client, '/moodytunes/browse/')
 
-        for song in resp_data:
+        for song in resp_data['results']:
             MoodyTunesClient.create_vote(self.client, song, self.emotion, True, self.host, csrf_token=csrf_token)
 
     @task
@@ -40,7 +40,7 @@ class PlaylistActions(UserAuth, FastHttpUser):
 
         # If there are songs in the playlist, delete a song from it
         if resp_data['results']:
-            votes = resp.json()['results']
+            votes = resp_data['results']
             song = random.choice(votes)['song']
             MoodyTunesClient.delete_vote(self.client, song, self.emotion, self.host)
 
