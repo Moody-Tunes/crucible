@@ -14,7 +14,7 @@ class PlaylistActions(UserAuth, FastHttpUser):
     wait_time = between(5, 9)
 
     def on_start(self):
-        super(PlaylistActions, self).on_start()
+        super().on_start()
         self.create_playlist()
 
     def create_playlist(self):

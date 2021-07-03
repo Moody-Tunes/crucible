@@ -13,26 +13,19 @@ class BrowseActions(UserAuth, FastHttpUser):
     wait_time = between(5, 9)
 
     @task
-    def get_browse_playlist(self):
+    def get_browse_playlist_and_vote_on_song(self):
         emotion = random.choice(self.emotions)
-        MoodyTunesClient.get_browse_playlist(self.client, emotion)
-
-    @task
-    def get_last_playlist(self):
-        MoodyTunesClient.get_last_playlist(self.client)
-
-    @task
-    def vote_on_song(self):
-        emotion = random.choice(self.emotions)
-
-        # Get a song from the browse playlist for emotion to vote on
         resp = MoodyTunesClient.get_browse_playlist(self.client, emotion)
+
         resp_data = resp.json()
 
-        # Ensure we have a track from the playlist to vote on
         if resp_data['results']:
             song = random.choice(resp_data['results'])
 
             vote = random.choice([True, False])  # Randomize value for vote
 
             MoodyTunesClient.create_vote(self.client, song, emotion, vote, self.host)
+
+    @task
+    def get_last_playlist(self):
+        MoodyTunesClient.get_last_playlist(self.client)
